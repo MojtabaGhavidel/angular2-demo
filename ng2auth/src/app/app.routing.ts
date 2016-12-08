@@ -6,6 +6,8 @@ import { PrivateDealsComponent } from './private-deals.component';
 import { UploadComponent } from './upload.component.ts';
 import { ListComponent } from "./list.component";
 import {HTTPComponent} from "./http.component";
+import { TasksComponent } from "./tasks.component";
+
 
 
 
@@ -38,8 +40,12 @@ const appRoutes: Routes = [
     path: 'http',
     component: HTTPComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'tasks',
+    component: TasksComponent,
+    canActivate: [AuthGuard]
   }
-  
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

@@ -8,16 +8,33 @@ const multer = require('multer');
 const path = require('path');
 
 
+var router = express.Router();
+var mongojs = require('mongojs');
+var db = mongojs('mongodb://mojtaba:123456@ds129038.mlab.com:29038/mytasklist_mojtaba', ['tasks']);
+
+
+
+
+// Set Static Folder
+app.use(express.static(path.join(__dirname, 'client')));
+
+// Body Parser MW
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
-
 
 
 const authCheck = jwt({
   secret: new Buffer('0u33qUTwmPD-MFf56yqJ2DeHuQncgEeR790T3Ke1TX3R5R5sylVfUNlHWyqQS4Al', 'base64'),
   audience: 'PBNaD26w0HdAinA5QFSyABjWZNrZSx9M'
 });
+
+
+
 
 const upload = multer({
   dest: 'uploads/',
@@ -39,8 +56,26 @@ app.post('/upload', upload.any(), (req, res) => {
   }));
 });
 
-
-
+/*
+// Get All Tasks
+router.get('/tasks', function(req, res, next){
+    db.tasks.find(function(err, tasks){
+        if(err){
+            res.send(err);
+        }
+        res.json(tasks);
+    });
+});
+*/
+// Get All Tasks
+app.get('/tasks', (req, res)=>{
+    db.tasks.find(function(err, tasks){
+        if(err){
+            res.send(err);
+        }
+        res.json(tasks);
+    });
+});
 
 app.get('/api/deals/public', (req, res)=>{
   let deals = [
@@ -141,11 +176,6 @@ app.get('/api/deals/private', authCheck, (req,res)=>{
 
 app.listen(3001);
 console.log('Listening on localhost:3001');
-
-
-
-
-
 
 
 /*
